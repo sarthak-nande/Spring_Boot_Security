@@ -33,10 +33,10 @@ public class ProjectSecurtiyConfig {
 		return http.build();
 	}
 	
-	@Bean
-	public UserDetailsService userDetailsService(DataSource dataSource) {
-		return new JdbcUserDetailsManager(dataSource);
-	}
+//	@Bean
+//	public UserDetailsService userDetailsService(DataSource dataSource) {
+//		return new JdbcUserDetailsManager(dataSource);
+//	}
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
