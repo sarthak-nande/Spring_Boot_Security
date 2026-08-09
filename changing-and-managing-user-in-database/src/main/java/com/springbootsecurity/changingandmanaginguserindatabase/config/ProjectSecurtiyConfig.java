@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,7 @@ public class ProjectSecurtiyConfig {
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) {
 //		http.authorizeHttpRequests((requests) -> requests.anyRequest().permitAll());
 //		http.authorizeHttpRequests((requests) -> requests.anyRequest().denyAll());
+		http.redirectToHttps(Customizer.withDefaults());
 		http.authorizeHttpRequests((requests) -> requests.requestMatchers("/user-details").authenticated()
 				.requestMatchers("/home").permitAll());
 		http.formLogin(withDefaults());
