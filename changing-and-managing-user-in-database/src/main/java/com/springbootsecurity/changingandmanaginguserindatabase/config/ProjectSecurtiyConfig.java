@@ -13,11 +13,15 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.springbootsecurity.changingandmanaginguserindatabase.customeauthexception.CustomizeAccessDenied;
 import com.springbootsecurity.changingandmanaginguserindatabase.customeauthexception.CustomizeAuthenticationEntryPoint;
+import com.springbootsecurity.changingandmanaginguserindatabase.filter.csrfCoockiFilter;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -40,6 +44,10 @@ public class ProjectSecurtiyConfig {
 	            return config;
 	        }
 	    }));
+		http.csrf(csrfConfig -> csrfConfig
+				.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
+		http.addFilterAfter(new csrfCoockiFilter(), BasicAuthenticationFilter.class);
 		http.sessionManagement(ism -> ism.invalidSessionUrl("/invalid-session"));
 		http.redirectToHttps(Customizer.withDefaults());
 		http.authorizeHttpRequests((requests) -> requests.requestMatchers("/user-details").authenticated()
