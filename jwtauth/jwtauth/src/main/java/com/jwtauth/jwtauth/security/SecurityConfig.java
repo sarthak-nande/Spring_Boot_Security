@@ -37,11 +37,14 @@ public class SecurityConfig {
 
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	private final CsrfAuthenticationFilter csrfAuthenticationFilter;
+	private final OauthTwoSuccessHandler oauthTwoSuccessHandler;
 
 	@Autowired
-	public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CsrfAuthenticationFilter csrfAuthenticationFilter) {
+	public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CsrfAuthenticationFilter csrfAuthenticationFilter
+			, OauthTwoSuccessHandler oauthTwoSuccessHandler) {
 		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
 		this.csrfAuthenticationFilter = csrfAuthenticationFilter;
+		this.oauthTwoSuccessHandler = oauthTwoSuccessHandler;
 	}
 
 	@Bean
@@ -51,6 +54,7 @@ public class SecurityConfig {
 								.csrfTokenRequestHandler(new XorCsrfTokenRequestAttributeHandler()))
 				.cors(cors -> cors.configurationSource(corsfigurationSource()))
 				.addFilterAfter(csrfAuthenticationFilter, BasicAuthenticationFilter.class)
+				.oauth2Login(oauth -> oauth.successHandler(oauthTwoSuccessHandler))
 				.sessionManagement(
 						sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.exceptionHandling(exc -> exc.authenticationEntryPoint(
